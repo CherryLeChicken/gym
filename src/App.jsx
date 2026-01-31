@@ -1,35 +1,40 @@
-import { useState } from 'react'
-import CameraFeed from './components/CameraFeed'
-import ExerciseSelector from './components/ExerciseSelector'
-import ControlPanel from './components/ControlPanel'
-import FeedbackDisplay from './components/FeedbackDisplay'
-import VoicePersonalitySelector from './components/VoicePersonalitySelector'
-import ApiKeyTester from './components/ApiKeyTester'
-import { VOICE_PERSONALITY, VOICE_GENDER } from './hooks/useVoiceFeedback'
+import { useState } from "react";
+import CameraFeed from "./components/CameraFeed";
+import ExerciseSelector from "./components/ExerciseSelector";
+import ControlPanel from "./components/ControlPanel";
+import FeedbackDisplay from "./components/FeedbackDisplay";
+import VoicePersonalitySelector from "./components/VoicePersonalitySelector";
+import ApiKeyTester from "./components/ApiKeyTester";
+import { VOICE_PERSONALITY, VOICE_GENDER } from "./hooks/useVoiceFeedback";
 
 function App() {
-  const [selectedExercise, setSelectedExercise] = useState(null)
-  const [hoveredExercise, setHoveredExercise] = useState(null)
-  const [isActive, setIsActive] = useState(false)
-  const [feedback, setFeedback] = useState('')
-  const [repCount, setRepCount] = useState(0)
-  const [voicePersonality, setVoicePersonality] = useState(VOICE_PERSONALITY.NEUTRAL)
-  const [voiceGender, setVoiceGender] = useState(VOICE_GENDER.MALE)
+
+  const [selectedExercise, setSelectedExercise] = useState(null);
+  const [isActive, setIsActive] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [repCount, setRepCount] = useState(0);
+  const [voicePersonality, setVoicePersonality] = useState(
+    VOICE_PERSONALITY.NEUTRAL,
+  );
+  const [voiceGender, setVoiceGender] = useState(VOICE_GENDER.MALE);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+    <div className="min-h-screen bg-[#0B132B]">
       {/* Background texture overlay */}
       <div className="fixed inset-0 opacity-5 pointer-events-none">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
-          backgroundSize: '40px 40px'
-        }}></div>
+        <div
+          className="absolute inset-0"
+          style={{
+            backgroundImage: `radial-gradient(circle at 2px 2px, white 1px, transparent 0)`,
+            backgroundSize: "40px 40px",
+          }}
+        ></div>
       </div>
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <header className="mb-12 text-center">
-          <h1 className="font-display text-5xl md:text-6xl font-bold mb-3 bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="font-bangers text-5xl md:text-6xl font-bold mb-3 text-[#6FFFE9]">
             FormBuddy
           </h1>
           <p className="text-slate-400 text-lg font-body">
@@ -41,7 +46,7 @@ function App() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Left Column - Camera Feed */}
           <div className="lg:col-span-2">
-            <CameraFeed 
+            <CameraFeed
               exercise={selectedExercise}
               hoveredExercise={hoveredExercise}
               isActive={isActive}
@@ -54,14 +59,14 @@ function App() {
 
           {/* Right Column - Controls */}
           <div className="space-y-6">
-            <ExerciseSelector 
+            <ExerciseSelector
               selectedExercise={selectedExercise}
               onSelect={setSelectedExercise}
               onHover={setHoveredExercise}
               disabled={isActive}
             />
-            
-            <ControlPanel 
+
+            <ControlPanel
               isActive={isActive}
               onToggle={setIsActive}
               hasExercise={!!selectedExercise}
@@ -77,7 +82,7 @@ function App() {
             <ApiKeyTester />
 
             <FeedbackDisplay feedback={feedback} />
-            
+
             {/* Rep Counter */}
             {isActive && selectedExercise && repCount > 0 && (
               <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-6">
@@ -95,7 +100,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
