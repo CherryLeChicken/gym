@@ -1,4 +1,4 @@
-export default function ExerciseSelector({ selectedExercise, onSelect, disabled }) {
+export default function ExerciseSelector({ selectedExercise, onSelect, onHover, disabled }) {
   const exercises = [
     { id: 'squat', name: 'Squat', icon: '🏋️' },
     { id: 'push-up', name: 'Push-up', icon: '💪' }
@@ -14,6 +14,18 @@ export default function ExerciseSelector({ selectedExercise, onSelect, disabled 
           <button
             key={exercise.id}
             onClick={() => onSelect(exercise.id)}
+            onMouseEnter={() => {
+              if (!disabled && onHover) {
+                console.log('Mouse enter on exercise:', exercise.id)
+                onHover(exercise.id)
+              }
+            }}
+            onMouseLeave={() => {
+              if (!disabled && onHover) {
+                console.log('Mouse leave on exercise')
+                onHover(null)
+              }
+            }}
             disabled={disabled}
             className={`w-full p-4 rounded-xl border-2 transition-all duration-200 text-left ${
               selectedExercise === exercise.id

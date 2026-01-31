@@ -4,11 +4,18 @@ import { useFormAnalysis } from '../hooks/useFormAnalysis'
 import { useVoiceFeedback } from '../hooks/useVoiceFeedback'
 import { usePresage } from '../hooks/usePresage'
 
-export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountUpdate, voicePersonality, voiceGender }) {
+export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeedback, onRepCountUpdate, voicePersonality, voiceGender }) {
   const videoRef = useRef(null)
+  const previewVideoRef = useRef(null)
   const canvasRef = useRef(null)
   const [stream, setStream] = useState(null)
   const [error, setError] = useState(null)
+
+  // Exercise preview video URLs (MuscleWiki exercise demo videos)
+  const previewVideos = {
+    'squat': 'https://media.musclewiki.com/media/uploads/videos/branded/male-Bodyweight-bodyweight-box-squat-side.mp4',
+    'push-up': 'https://media.musclewiki.com/media/uploads/videos/branded/male-Bodyweight-push-up-side.mp4'
+  }
   const lastFeedbackTimeRef = useRef(0)
   const lastKeypointLogTimeRef = useRef(0)
   const lastDetectionLogTimeRef = useRef(0)
@@ -20,21 +27,8 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
   const { speak } = useVoiceFeedback(voicePersonality, voiceGender)
   const { trackMovement, trackRep, getPredictions, predictions: presagePredictions, repCount, breathingRate, breathingConsistency, signalConfidence } = usePresage(exercise, isActive)
   
-  // Debug: Log Presage metrics (throttled)
-  useEffect(() => {
-    if (isActive && exercise && breathingRate) {
-      const now = Date.now()
-      if (!lastPresageLogTimeRef.current || now - lastPresageLogTimeRef.current > 5000) {
-        console.log('Presage Metrics:', {
-          breathingRate,
-          breathingConsistency,
-          signalConfidence,
-          repCount
-        })
-        lastPresageLogTimeRef.current = now
-      }
-    }
-  }, [isActive, exercise, breathingRate, breathingConsistency, signalConfidence, repCount])
+  // Presage metrics monitoring (debug logging removed for production)
+  // Metrics are displayed in the UI panel instead
   const [detectionStatus, setDetectionStatus] = useState('initializing') // 'initializing', 'detecting', 'no-pose', 'detected', 'full-body'
   const [isFullBodyVisible, setIsFullBodyVisible] = useState(false)
   const lastPresageCheckRef = useRef(0)
@@ -54,8 +48,17 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
         }
         setError(null)
       } catch (err) {
-        setError('Camera access denied. Please allow camera permissions.')
-        console.error('Camera error:', err)
+        // User-friendly error messages
+        if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+          setError('Camera permission denied. Please allow camera access to use FormBuddy.')
+        } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') {
+          setError('No camera found. Please connect a camera and try again.')
+        } else if (err.name === 'NotReadableError' || err.name === 'TrackStartError') {
+          setError('Camera is already in use by another application. Please close other apps and try again.')
+        } else {
+          setError(`Camera error: ${err.message || 'Unable to access camera. Please try again.'}`)
+        }
+        console.error('Camera error:', err.message || err.name)
       }
     }
 
@@ -85,17 +88,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
       return
     }
 
-    // Debug: log keypoints when they change (throttled to once per 3 seconds)
-    if (keypoints) {
-      const visibleCount = keypoints.filter(kp => kp && kp.score > 0.3).length
-      if (visibleCount > 0) {
-        const now = Date.now()
-        if (!lastKeypointLogTimeRef.current || now - lastKeypointLogTimeRef.current > 3000) {
-          console.log(`Detected ${visibleCount} keypoints:`, keypoints.filter(kp => kp && kp.score > 0.3).map(kp => kp.name))
-          lastKeypointLogTimeRef.current = now
-        }
-      }
-    }
+    // Keypoint detection monitoring (debug logging removed for production)
 
     if (!keypoints || keypoints.length === 0) {
       setDetectionStatus('no-pose')
@@ -193,7 +186,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
 
     if (isLoading) {
       setDetectionStatus('initializing')
-      console.log('Pose detector still loading...')
+      // Pose detector still loading - no action needed
       return
     }
 
@@ -208,7 +201,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
     // Start detection loop function
     const startDetectionLoop = () => {
       setDetectionStatus('detecting')
-      console.log('Starting pose detection loop')
+      // Starting pose detection loop
       let animationFrameId
       let frameCount = 0
       let lastLogTime = Date.now()
@@ -229,27 +222,27 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
             
             // Log first detection
             if (frameCount === 1) {
-              console.log('First pose detection completed!')
+              // First pose detection completed
             }
             
             // Throttle periodic logs to every 5 seconds
             const now = Date.now()
             if (now - lastLogTime > 5000) {
-              console.log(`Detection running... frame ${frameCount}`)
+              // Detection running (throttled logging removed for performance)
               lastLogTime = now
             }
           } catch (error) {
             // Only log errors, not every frame
             const now = Date.now()
             if (!lastDetectionLogTimeRef.current || now - lastDetectionLogTimeRef.current > 5000) {
-              console.error('Error in detection loop:', error)
+              console.error('Pose detection error:', error.message || error)
               lastDetectionLogTimeRef.current = now
             }
           }
         } else {
           // Video not ready yet - only log once
           if (frameCount === 0) {
-            console.log('Video not ready yet, waiting...')
+            // Video not ready yet, waiting...
           }
         }
 
@@ -266,7 +259,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
     }
 
     if (!checkVideoReady()) {
-      console.log('Waiting for video to be ready...')
+      // Waiting for video to be ready...
       let timeoutCount = 0
       const maxWaitTime = 5000 // 5 seconds max wait
       let lastCheckLogTime = Date.now()
@@ -275,17 +268,17 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
         timeoutCount += 100
         if (checkVideoReady()) {
           clearInterval(checkInterval)
-          console.log('Video is ready! Starting detection...')
+          // Video is ready! Starting detection...
           startDetectionLoop()
         } else if (timeoutCount >= maxWaitTime) {
           clearInterval(checkInterval)
-          console.warn('Video not ready after timeout, starting detection anyway...')
+          console.warn('Video not ready after timeout, starting detection anyway')
           startDetectionLoop()
         } else {
           // Only log waiting status every 2 seconds
           const now = Date.now()
           if (now - lastCheckLogTime > 2000) {
-            console.log(`Still waiting for video... (${Math.round(timeoutCount / 1000)}s)`)
+            // Still waiting for video (throttled logging removed)
             lastCheckLogTime = now
           }
         }
@@ -358,7 +351,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
     const canvas = canvasRef.current
     const video = videoRef.current
     if (!canvas || !video || !keypoints || keypoints.length === 0) {
-      console.log('Cannot draw pose - missing canvas, video, or keypoints')
+      // Cannot draw pose - missing canvas, video, or keypoints
       return
     }
 
@@ -368,11 +361,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
 
     ctx.clearRect(0, 0, canvas.width, canvas.height)
     
-    // Debug: log what we're trying to draw
-    const validKeypoints = keypoints.filter(kp => kp && kp.score > 0.3)
-    if (validKeypoints.length > 0) {
-      console.log(`Drawing ${validKeypoints.length} keypoints`)
-    }
+    // Drawing pose skeleton and keypoints
     
     // Define skeleton connections (full body)
     const connections = [
@@ -538,25 +527,42 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
     }
   }, [repCount, onRepCountUpdate])
 
-  if (!isActive) {
-    return (
-      <div className="relative aspect-video bg-slate-900 rounded-2xl border border-slate-800 flex items-center justify-center overflow-hidden">
-        <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800 flex items-center justify-center">
-            <svg className="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-            </svg>
-          </div>
-          <p className="text-slate-500 font-body">Select an exercise and start to begin</p>
-        </div>
-      </div>
-    )
-  }
+  // Show preview video when exercise is selected (and not active)
+  const showPreview = !isActive && exercise && previewVideos[exercise]
+
+  // Handle preview video playback
+  useEffect(() => {
+    const previewVideo = previewVideoRef.current
+    if (!previewVideo) return
+
+    if (showPreview && previewVideos[exercise]) {
+      previewVideo.src = previewVideos[exercise]
+      previewVideo.load()
+      previewVideo.play().catch(err => {
+        console.error('Error playing preview video:', err)
+      })
+    } else {
+      previewVideo.pause()
+      previewVideo.src = ''
+    }
+  }, [showPreview, exercise])
 
   if (error) {
     return (
       <div className="relative aspect-video bg-slate-900 rounded-2xl border border-red-500/50 flex items-center justify-center p-8">
-        <p className="text-red-400 text-center">{error}</p>
+        <div className="text-center max-w-md">
+          <div className="text-5xl mb-4">📷</div>
+          <p className="text-red-400 font-body mb-4">{error}</p>
+          <button
+            onClick={() => {
+              setError(null)
+              window.location.reload()
+            }}
+            className="px-6 py-2 bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400 rounded-xl hover:bg-cyan-500/30 transition-colors font-display font-semibold"
+          >
+            Reload Page
+          </button>
+        </div>
       </div>
     )
   }
@@ -646,12 +652,39 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
 
   return (
     <div className="relative aspect-video bg-slate-900 rounded-2xl border border-slate-800 overflow-hidden">
+      {/* Default message when not active and no exercise selected */}
+      {!isActive && !exercise && (
+        <div className="absolute inset-0 flex items-center justify-center z-0">
+          <div className="text-center">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800 flex items-center justify-center">
+              <svg className="w-8 h-8 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+              </svg>
+            </div>
+            <p className="text-slate-500 font-body">Select an exercise and start to begin</p>
+          </div>
+        </div>
+      )}
+
+      {/* Exercise preview video - shown when exercise is selected (and not active) */}
+      {showPreview && (
+        <video
+          ref={previewVideoRef}
+          autoPlay
+          loop
+          playsInline
+          muted
+          className="absolute inset-0 w-full h-full object-cover z-10"
+        />
+      )}
+
+      {/* Live camera feed */}
       <video
         ref={videoRef}
         autoPlay
         playsInline
         muted
-        className="w-full h-full object-cover"
+        className={`w-full h-full object-cover ${showPreview ? 'opacity-0' : ''}`}
       />
       <canvas
         ref={canvasRef}
@@ -659,14 +692,23 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
       />
       
       {/* Exercise name badge */}
-      {exercise && (
+      {exercise && !showPreview && (
         <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-slate-700">
           <span className="text-cyan-400 font-display font-semibold capitalize">{exercise}</span>
         </div>
       )}
 
+      {/* Preview label */}
+      {showPreview && (
+        <div className="absolute top-4 left-4 bg-slate-900/80 backdrop-blur-sm px-4 py-2 rounded-lg border border-cyan-500/50 z-20">
+          <span className="text-cyan-400 font-display font-semibold capitalize">
+            {exercise} Preview
+          </span>
+        </div>
+      )}
+
       {/* Detection status indicator */}
-      {isActive && (
+      {isActive && !showPreview && (
         <div className={`absolute top-4 right-4 ${statusConfig.bgColor} backdrop-blur-sm px-4 py-2 rounded-lg border ${statusConfig.borderColor} ${statusConfig.pulse ? 'animate-pulse' : ''}`}>
           <div className="flex items-center gap-2">
             <span className={statusConfig.color}>{statusConfig.icon}</span>
@@ -689,14 +731,14 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
       )}
 
       {/* Green border when full body is detected */}
-      {isFullBodyVisible && exercise && (
+      {isFullBodyVisible && exercise && !showPreview && (
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 border-4 border-green-500 rounded-2xl animate-pulse-slow"></div>
         </div>
       )}
 
       {/* Cyan border when pose detected but not full body */}
-      {detectionStatus === 'detected' && !isFullBodyVisible && (
+      {detectionStatus === 'detected' && !isFullBodyVisible && !showPreview && (
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 border-2 border-cyan-400/30 rounded-2xl"></div>
         </div>
@@ -704,7 +746,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
 
 
       {/* Presage Metrics Display - shows when face/shoulders detected (breathing) or full body (all metrics) */}
-      {isActive && (detectionStatus === 'full-body' || detectionStatus === 'detected') && (
+      {isActive && !showPreview && (detectionStatus === 'full-body' || detectionStatus === 'detected') && (
         <div className={`absolute bottom-4 left-4 bg-slate-900/95 backdrop-blur-sm px-4 py-3 rounded-lg border max-w-xs ${
           detectionStatus === 'full-body' ? 'border-green-500/50' : 'border-cyan-500/50'
         }`}>
@@ -753,7 +795,7 @@ export default function CameraFeed({ exercise, isActive, onFeedback, onRepCountU
       )}
 
       {/* Debug panel showing detected joints */}
-      {detectionStatus === 'detected' && detectedJoints.length > 0 && (
+      {detectionStatus === 'detected' && detectedJoints.length > 0 && !showPreview && (
         <div className="absolute bottom-4 right-4 bg-slate-900/95 backdrop-blur-sm px-4 py-3 rounded-lg border border-cyan-500/50 max-w-xs max-h-48 overflow-y-auto">
           <div className="text-xs text-cyan-400 font-semibold mb-2 uppercase tracking-wide">
             Detected Joints ({detectedJoints.length})

@@ -11,8 +11,6 @@ export function usePoseDetection() {
   useEffect(() => {
     const initDetector = async () => {
       try {
-        console.log('Initializing TensorFlow.js...')
-        
         // Try to set backend to WebGL, fall back to CPU if it fails
         // Suppress console warnings during backend selection
         const originalWarn = console.warn
@@ -25,7 +23,6 @@ export function usePoseDetection() {
           try {
             await tf.setBackend(backend)
             await tf.ready()
-            console.log(`TensorFlow.js ready with ${backend} backend`)
             backendSet = true
             break
           } catch (backendError) {
@@ -40,23 +37,19 @@ export function usePoseDetection() {
         if (!backendSet) {
           // If all backends failed, just wait for default
           await tf.ready()
-          console.log('TensorFlow.js ready with default backend')
         }
         
-        console.log('Initializing MoveNet pose detector...')
+        // Initialize MoveNet pose detector
         const model = poseDetection.SupportedModels.MoveNet
         const detectorConfig = {
           modelType: poseDetection.movenet.modelType.SINGLEPOSE_LIGHTNING,
           enableSmoothing: true,
         }
-        console.log('Creating detector with config:', detectorConfig)
         const poseDetector = await poseDetection.createDetector(model, detectorConfig)
-        console.log('Pose detector initialized successfully!')
         setDetector(poseDetector)
         setIsLoading(false)
       } catch (error) {
-        console.error('Error initializing pose detector:', error)
-        console.error('Error details:', error.message, error.stack)
+        console.error('Error initializing pose detector:', error.message || error)
         setIsLoading(false)
       }
     }
@@ -66,11 +59,11 @@ export function usePoseDetection() {
 
   const detectPose = useCallback(async (videoElement) => {
     if (!detector) {
-      console.warn('Detector not ready')
+      // Detector not ready
       return
     }
     if (!videoElement) {
-      console.warn('Video element not ready')
+      // Video element not ready
       return
     }
 
@@ -94,11 +87,10 @@ export function usePoseDetection() {
         // No pose detected - this is normal if person isn't in frame
         setKeypoints(null)
       }
-    } catch (error) {
-      console.error('Error detecting pose:', error)
-      console.error('Error details:', error.message)
-      setKeypoints(null)
-    }
+        } catch (error) {
+          console.error('Error detecting pose:', error.message || error)
+          setKeypoints(null)
+        }
   }, [detector])
 
   return { detectPose, keypoints, isLoading }

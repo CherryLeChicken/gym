@@ -9,6 +9,7 @@ import { VOICE_PERSONALITY, VOICE_GENDER } from './hooks/useVoiceFeedback'
 
 function App() {
   const [selectedExercise, setSelectedExercise] = useState(null)
+  const [hoveredExercise, setHoveredExercise] = useState(null)
   const [isActive, setIsActive] = useState(false)
   const [feedback, setFeedback] = useState('')
   const [repCount, setRepCount] = useState(0)
@@ -42,6 +43,7 @@ function App() {
           <div className="lg:col-span-2">
             <CameraFeed 
               exercise={selectedExercise}
+              hoveredExercise={hoveredExercise}
               isActive={isActive}
               onFeedback={setFeedback}
               onRepCountUpdate={setRepCount}
@@ -55,6 +57,7 @@ function App() {
             <ExerciseSelector 
               selectedExercise={selectedExercise}
               onSelect={setSelectedExercise}
+              onHover={setHoveredExercise}
               disabled={isActive}
             />
             
