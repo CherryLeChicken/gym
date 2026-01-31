@@ -1,23 +1,37 @@
-import { useState } from "react";
-import CameraFeed from "./components/CameraFeed";
-import ExerciseSelector from "./components/ExerciseSelector";
-import ControlPanel from "./components/ControlPanel";
-import FeedbackDisplay from "./components/FeedbackDisplay";
-import VoicePersonalitySelector from "./components/VoicePersonalitySelector";
-import ApiKeyTester from "./components/ApiKeyTester";
-import { VOICE_PERSONALITY, VOICE_GENDER } from "./hooks/useVoiceFeedback";
+import { useState } from 'react'
+import CameraFeed from './components/CameraFeed'
+import ExerciseSelector from './components/ExerciseSelector'
+import ControlPanel from './components/ControlPanel'
+import FeedbackDisplay from './components/FeedbackDisplay'
+import VoicePersonalitySelector from './components/VoicePersonalitySelector'
+import ApiKeyTester from './components/ApiKeyTester'
+import BackgroundMusicControl from './components/BackgroundMusicControl'
+import { VOICE_PERSONALITY, VOICE_GENDER } from './hooks/useVoiceFeedback'
+import { useBackgroundMusic } from './hooks/useBackgroundMusic'
 
 function App() {
+  const [selectedExercise, setSelectedExercise] = useState(null)
+  const [hoveredExercise, setHoveredExercise] = useState(null)
+  const [isActive, setIsActive] = useState(false)
+  const [feedback, setFeedback] = useState('')
+  const [repCount, setRepCount] = useState(0)
+  const [voicePersonality, setVoicePersonality] = useState(VOICE_PERSONALITY.NEUTRAL)
+  const [voiceGender, setVoiceGender] = useState(VOICE_GENDER.MALE)
 
-  const [selectedExercise, setSelectedExercise] = useState(null);
-  const [hoveredExercise, setHoveredExercise] = useState(null);
-  const [isActive, setIsActive] = useState(false);
-  const [feedback, setFeedback] = useState("");
-  const [repCount, setRepCount] = useState(0);
-  const [voicePersonality, setVoicePersonality] = useState(
-    VOICE_PERSONALITY.NEUTRAL,
-  );
-  const [voiceGender, setVoiceGender] = useState(VOICE_GENDER.MALE);
+  const { 
+    playMusic, 
+    stopMusic, 
+    togglePlay,
+    updateVolume,
+    toggleMute,
+    isMuted,
+    volume,
+    isPlaying, 
+    isLoading, 
+    error: musicError,
+    currentPrompt,
+    audioData
+  } = useBackgroundMusic()
 
   return (
     <div className="min-h-screen bg-[#0B132B]">
@@ -78,6 +92,21 @@ function App() {
               gender={voiceGender}
               onPersonalitySelect={setVoicePersonality}
               onGenderSelect={setVoiceGender}
+            />
+
+            <BackgroundMusicControl 
+              playMusic={playMusic}
+              stopMusic={stopMusic}
+              togglePlay={togglePlay}
+              updateVolume={updateVolume}
+              toggleMute={toggleMute}
+              isMuted={isMuted}
+              volume={volume}
+              isPlaying={isPlaying}
+              isLoading={isLoading}
+              error={musicError}
+              currentPrompt={currentPrompt}
+              audioData={audioData}
             />
 
             <ApiKeyTester />

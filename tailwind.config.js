@@ -9,6 +9,15 @@ export default {
         display: ['"Red Hat Text"', "sans-serif"],
         body: ['"Red Hat Text"', "sans-serif"],
       },
+      keyframes: {
+        loading: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        }
+      },
+      animation: {
+        'loading-progress': 'loading 2s linear infinite',
+      }
     },
   },
   plugins: [],
