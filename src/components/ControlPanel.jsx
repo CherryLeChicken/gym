@@ -9,7 +9,7 @@ export default function ControlPanel({ isActive, onToggle, hasExercise }) {
             : "bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500/30"
         } cursor-pointer`}
       >
-        {isActive ? "⏸ Stop" : "▶ Start Detection"}
+        {isActive ? "⏸ Stop" : "▶ Start Exercise"}
       </button>
       {!hasExercise && !isActive && (
         <p className="mt-3 text-sm text-[#FDF8FF] text-center">
