@@ -5,14 +5,14 @@ export default function ControlPanel({ isActive, onToggle, hasExercise }) {
         onClick={() => onToggle(!isActive)}
         className={`w-full py-4 px-6 rounded-xl font-display font-semibold text-lg transition-all duration-200 ${
           isActive
-            ? 'bg-red-500/20 border-2 border-red-500 text-red-400 hover:bg-red-500/30'
-            : 'bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500/30'
+            ? "bg-red-500/20 border-2 border-red-500 text-red-400 hover:bg-red-500/30"
+            : "bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400 hover:bg-cyan-500/30"
         } cursor-pointer`}
       >
-        {isActive ? '⏸ Stop' : '▶ Start Detection'}
+        {isActive ? "⏸ Stop" : "▶ Start Detection"}
       </button>
       {!hasExercise && !isActive && (
-        <p className="mt-3 text-sm text-slate-400 text-center">
+        <p className="mt-3 text-sm text-[#FDF8FF] text-center">
           Start to test pose detection, or select an exercise for form analysis
         </p>
       )}
@@ -22,5 +22,5 @@ export default function ControlPanel({ isActive, onToggle, hasExercise }) {
         </p>
       )}
     </div>
-  )
+  );
 }

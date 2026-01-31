@@ -35,10 +35,10 @@ function App() {
       <div className="relative z-10 container mx-auto px-4 py-8">
         {/* Header */}
         <header className="mb-12 text-center">
-          <h1 className="font-bangers text-5xl md:text-6xl font-bold mb-3 text-[#6FFFE9]">
-            FormBuddy
+          <h1 className="zalando-sans-expanded text-[4.5rem] md:text-[5.625rem] font-bold mb-3 bg-gradient-to-r from-[#00F5FF] via-[#76FFF6] to-[#FF00FF] bg-clip-text text-transparent">
+            CHIN UP
           </h1>
-          <p className="text-slate-400 text-lg font-body">
+          <p className="text-[#FDF8FF] text-lg font-body">
             Voice-guided fitness companion powered by AI
           </p>
         </header>
@@ -91,7 +91,7 @@ function App() {
                   <div className="text-4xl font-display font-bold text-cyan-400 mb-2">
                     {repCount}
                   </div>
-                  <div className="text-sm text-slate-400 font-body uppercase tracking-wide">
+                  <div className="text-sm text-[#FDF8FF] font-body uppercase tracking-wide">
                     Reps Completed
                   </div>
                 </div>

@@ -1,16 +1,34 @@
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export default function ExerciseSelector({ selectedExercise, onSelect, onHover, disabled }) {
+=======
+=======
+>>>>>>> Stashed changes
+<<<<<<< HEAD
+export default function ExerciseSelector({
+  selectedExercise,
+  onSelect,
+  disabled,
+}) {
+=======
+export default function ExerciseSelector({ selectedExercise, onSelect, onHover, disabled }) {
+>>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
   const exercises = [
-    { id: 'squat', name: 'Squat', icon: '🏋️' },
-    { id: 'push-up', name: 'Push-up', icon: '💪' }
-  ]
+    { id: "squat", name: "Squat", icon: "🏋️" },
+    { id: "push-up", name: "Push-up", icon: "💪" },
+  ];
 
   return (
     <div className="bg-slate-900/50 backdrop-blur-sm rounded-2xl border border-slate-800 p-6">
-      <h2 className="font-display text-xl font-semibold mb-4 text-slate-200">
+      <h2 className="font-display text-xl font-semibold mb-4 text-[#FDF8FF]">
         Select Exercise
       </h2>
       <div className="space-y-3">
-        {exercises.map(exercise => (
+        {exercises.map((exercise) => (
           <button
             key={exercise.id}
             onClick={() => onSelect(exercise.id)}
@@ -29,13 +47,13 @@ export default function ExerciseSelector({ selectedExercise, onSelect, onHover, 
             disabled={disabled}
             className={`w-full p-4 rounded-xl border-2 transition-all duration-200 text-left ${
               selectedExercise === exercise.id
-                ? 'border-cyan-400 bg-cyan-400/10'
-                : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
-            } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                ? "border-cyan-400 bg-cyan-400/10"
+                : "border-slate-700 bg-slate-800/50 hover:border-slate-600"
+            } ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
           >
             <div className="flex items-center gap-3">
               <span className="text-2xl">{exercise.icon}</span>
-              <span className="font-body font-medium text-slate-200 capitalize">
+              <span className="font-body font-medium text-[#FBF8FF] capitalize">
                 {exercise.name}
               </span>
             </div>
@@ -43,5 +61,5 @@ export default function ExerciseSelector({ selectedExercise, onSelect, onHover, 
         ))}
       </div>
     </div>
-  )
+  );
 }
