@@ -1,6 +1,9 @@
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 export default function ExerciseSelector({ selectedExercise, onSelect, onHover, disabled }) {
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
 export default function ExerciseSelector({
   selectedExercise,
@@ -10,6 +13,9 @@ export default function ExerciseSelector({
 =======
 export default function ExerciseSelector({ selectedExercise, onSelect, onHover, disabled }) {
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   const exercises = [
     { id: "squat", name: "Squat", icon: "🏋️" },

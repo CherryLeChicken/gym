@@ -4,7 +4,10 @@ import { useFormAnalysis } from "../hooks/useFormAnalysis";
 import { useVoiceFeedback } from "../hooks/useVoiceFeedback";
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
 export default function CameraFeed({ exercise, isActive, onFeedback }) {
   const videoRef = useRef(null);
@@ -21,6 +24,9 @@ export default function CameraFeed({ exercise, isActive, onFeedback }) {
   const { speak } = useVoiceFeedback();
   const [detectionStatus, setDetectionStatus] = useState("initializing"); // 'initializing', 'detecting', 'no-pose', 'detected', 'full-body'
   const [isFullBodyVisible, setIsFullBodyVisible] = useState(false);
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
 export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeedback, onRepCountUpdate, voicePersonality, voiceGender }) {
@@ -69,10 +75,16 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
         setError(null);
       } catch (err) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
         setError("Camera access denied. Please allow camera permissions.");
         console.error("Camera error:", err);
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
         // User-friendly error messages
@@ -87,6 +99,10 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
         }
         console.error('Camera error:', err.message || err.name)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+>>>>>>> Stashed changes
 =======
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
 >>>>>>> Stashed changes
@@ -115,8 +131,11 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
     }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     // Keypoint detection monitoring (debug logging removed for production)
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
     // Debug: log keypoints when they change (throttled to once per 3 seconds)
     if (keypoints) {
@@ -140,6 +159,9 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
 =======
     // Keypoint detection monitoring (debug logging removed for production)
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
     if (!keypoints || keypoints.length === 0) {
@@ -268,13 +290,19 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
             // Log first detection
             if (frameCount === 1) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
               // First pose detection completed
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
               console.log("First pose detection completed!");
 =======
               // First pose detection completed
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
             }
 
@@ -282,7 +310,10 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
             const now = Date.now();
             if (now - lastLogTime > 5000) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
               console.log(`Detection running... frame ${frameCount}`);
               lastLogTime = now;
@@ -296,6 +327,9 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
             ) {
               console.error("Error in detection loop:", error);
               lastDetectionLogTimeRef.current = now;
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
               // Detection running (throttled logging removed for performance)
@@ -314,13 +348,19 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
           // Video not ready yet - only log once
           if (frameCount === 0) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
             // Video not ready yet, waiting...
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
             console.log("Video not ready yet, waiting...");
 =======
             // Video not ready yet, waiting...
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
           }
         }
@@ -339,13 +379,19 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
 
     if (!checkVideoReady()) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
       console.log("Waiting for video to be ready...");
       let timeoutCount = 0;
       const maxWaitTime = 5000; // 5 seconds max wait
       let lastCheckLogTime = Date.now();
 
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
       // Waiting for video to be ready...
@@ -381,12 +427,18 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
           const now = Date.now();
           if (now - lastCheckLogTime > 2000) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
             console.log(
               `Still waiting for video... (${Math.round(timeoutCount / 1000)}s)`,
             );
             lastCheckLogTime = now;
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
             // Still waiting for video (throttled logging removed)
@@ -486,10 +538,16 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
     const video = videoRef.current;
     if (!canvas || !video || !keypoints || keypoints.length === 0) {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
       console.log("Cannot draw pose - missing canvas, video, or keypoints");
       return;
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
       // Cannot draw pose - missing canvas, video, or keypoints
@@ -660,7 +718,10 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
   };
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
   if (!isActive) {
     return (
@@ -689,6 +750,9 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
     );
   }
 =======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
   // Show preview video when exercise is selected (and not active)
   const showPreview = !isActive && exercise && previewVideos[exercise]
@@ -710,6 +774,10 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
     }
   }, [showPreview, exercise])
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+>>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+>>>>>>> Stashed changes
 =======
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
 >>>>>>> Stashed changes
@@ -883,6 +951,7 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
           <span className="text-cyan-400 font-display font-semibold capitalize">
             {exercise} Preview
           </span>
+<<<<<<< Updated upstream
         </div>
       )}
 
@@ -892,17 +961,25 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
           <span className="text-cyan-400 font-display font-semibold capitalize">
             {exercise} Preview
           </span>
+=======
+>>>>>>> Stashed changes
         </div>
       )}
 
       {/* Detection status indicator */}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
       {isActive && (
         <div
           className={`absolute top-4 right-4 ${statusConfig.bgColor} backdrop-blur-sm px-4 py-2 rounded-lg border ${statusConfig.borderColor} ${statusConfig.pulse ? "animate-pulse" : ""}`}
         >
+=======
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
 =======
 >>>>>>> Stashed changes
       {isActive && !showPreview && (
@@ -943,13 +1020,19 @@ export default function CameraFeed({ exercise, hoveredExercise, isActive, onFeed
 
       {/* Cyan border when pose detected but not full body */}
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
       {detectionStatus === 'detected' && !isFullBodyVisible && !showPreview && (
 =======
+=======
+>>>>>>> Stashed changes
 <<<<<<< HEAD
       {detectionStatus === "detected" && !isFullBodyVisible && (
 =======
       {detectionStatus === 'detected' && !isFullBodyVisible && !showPreview && (
 >>>>>>> 83a33f7741413d9f559348fccad62488bf18f607
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
         <div className="absolute inset-0 pointer-events-none">
           <div className="absolute inset-0 border-2 border-cyan-400/30 rounded-2xl"></div>
