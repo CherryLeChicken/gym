@@ -5,7 +5,8 @@
 @layer base {
   body {
     background-color: #0b132b;
-    @apply text-slate-50 font-body antialiased;
+    color: #fdf8ff;
+    @apply font-body antialiased;
   }
 }
 
@@ -16,6 +17,19 @@
 
   .bangers-regular {
     font-family: "Bangers", system-ui;
+    font-weight: 300;
+    font-style: normal;
+  }
+  .zalando-sans-expanded {
+    font-family: "Zalando Sans Expanded", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+  .red-hat-text {
+    font-family: "Red Hat Text", sans-serif;
+    font-optical-sizing: auto;
     font-weight: 400;
     font-style: normal;
   }

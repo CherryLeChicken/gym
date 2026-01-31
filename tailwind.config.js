@@ -4,9 +4,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        zalando: ['"Zalando Sans Expanded"', "sans-serif"],
         bangers: ["Bangers", "cursive"],
-        display: ['"Bricolage Grotesque"', "sans-serif"],
-        body: ['"DM Sans"', "sans-serif"],
+        display: ['"Red Hat Text"', "sans-serif"],
+        body: ['"Red Hat Text"', "sans-serif"],
       },
     },
   },
