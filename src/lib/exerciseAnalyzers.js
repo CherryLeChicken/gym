@@ -187,3 +187,99 @@ export function analyzePushUp(keypoints) {
 
   return { feedback, isValid, elbowAngle }
 }
+
+/**
+ * Analyze wall sit form based on keypoints
+ * Checks: knee angle (~90°), back upright (vertical), hips low enough, body static
+ */
+export function analyzeWallSit(keypoints) {
+  const leftHip = findKeypoint(keypoints, 'left_hip')
+  const rightHip = findKeypoint(keypoints, 'right_hip')
+  const leftKnee = findKeypoint(keypoints, 'left_knee')
+  const rightKnee = findKeypoint(keypoints, 'right_knee')
+  const leftAnkle = findKeypoint(keypoints, 'left_ankle')
+  const rightAnkle = findKeypoint(keypoints, 'right_ankle')
+  const leftShoulder = findKeypoint(keypoints, 'left_shoulder')
+  const rightShoulder = findKeypoint(keypoints, 'right_shoulder')
+
+  // Use left side by default, fallback to right
+  const hip = leftHip || rightHip
+  const knee = leftKnee || rightKnee
+  const ankle = leftAnkle || rightAnkle
+  const shoulder = leftShoulder || rightShoulder
+
+  // If key body parts are missing, return empty feedback
+  if (!hip || !knee || !ankle) {
+    return {
+      feedback: '',
+      isValid: false
+    }
+  }
+
+  // Calculate knee angle (hip-knee-ankle)
+  // For wall sit, knees should be bent at ~90°
+  const kneeAngle = calculateAngle(hip, knee, ankle)
+
+  // Calculate back angle (shoulder-hip-knee) to check if back is upright/vertical
+  let backAngle = null
+  if (shoulder) {
+    backAngle = calculateAngle(shoulder, hip, knee)
+  }
+
+  // Determine feedback based on angles
+  let feedback = ''
+  let isValid = true
+
+  // Knee angle analysis (should be ~90° for proper wall sit)
+  // Acceptable range: 75° - 105°
+  if (kneeAngle < 75) {
+    feedback = 'Bend your knees less - aim for a 90-degree angle'
+    isValid = false
+  } else if (kneeAngle > 105) {
+    feedback = 'Bend your knees more - aim for a 90-degree angle'
+    isValid = false
+  } else if (kneeAngle >= 85 && kneeAngle <= 95) {
+    feedback = 'Perfect knee angle! Keep holding'
+    isValid = true
+  } else {
+    feedback = 'Good form! Keep your knees at 90 degrees'
+    isValid = true
+  }
+
+  // Back alignment check - back should be upright/vertical
+  // For upright back, shoulder-hip-knee angle should be close to 180° (straight line)
+  if (backAngle !== null) {
+    if (backAngle < 160) {
+      feedback = 'Keep your back flat against the wall and upright'
+      isValid = false
+    } else if (backAngle >= 160 && backAngle < 175) {
+      // Back is mostly upright but could be better
+      if (feedback.includes('Perfect') || feedback.includes('Good form')) {
+        // Don't override positive feedback
+      } else {
+        feedback = 'Keep your back pressed flat against the wall'
+        isValid = true
+      }
+    }
+  }
+
+  // Check if hips are low enough
+  // Hips should be at a similar height to knees (or slightly lower) for proper wall sit
+  if (hip && knee) {
+    const hipKneeHeightDiff = hip.y - knee.y
+    // If hips are too high (negative or small positive difference), user isn't low enough
+    // For a good wall sit, hips should be at or below knee level
+    if (hipKneeHeightDiff < -20) {
+      feedback = 'Lower your hips - they should be at knee level or below'
+      isValid = false
+    } else if (hipKneeHeightDiff > 50) {
+      // Hips too low might indicate sliding down
+      if (!feedback.includes('Perfect') && !feedback.includes('Good form')) {
+        feedback = 'Keep your hips at knee level'
+        isValid = false
+      }
+    }
+  }
+
+  return { feedback, isValid, kneeAngle, backAngle }
+}

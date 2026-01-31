@@ -19,7 +19,7 @@ const EQUIPMENT_OPTIONS = [
 export default function Onboarding({ onComplete }) {
   const [name, setName] = useState('')
   const [workoutType, setWorkoutType] = useState('')
-  const [equipment, setEquipment] = useState('')
+  const [equipment, setEquipment] = useState([])
   const [errors, setErrors] = useState({})
 
   const handleSubmit = (e) => {
@@ -32,8 +32,8 @@ export default function Onboarding({ onComplete }) {
     if (!workoutType) {
       newErrors.workoutType = 'Please select a workout type'
     }
-    if (!equipment) {
-      newErrors.equipment = 'Please select your equipment'
+    if (equipment.length === 0) {
+      newErrors.equipment = 'Please select at least one equipment option'
     }
 
     if (Object.keys(newErrors).length > 0) {
@@ -159,32 +159,36 @@ export default function Onboarding({ onComplete }) {
           {/* Equipment Selection */}
           <div>
             <label className="block text-[#FDF8FF] font-body font-semibold mb-3">
-              What equipment do you have?
+              What equipment do you have? (Select all that apply)
             </label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {EQUIPMENT_OPTIONS.map((option) => (
                 <label
                   key={option.value}
                   className={`relative flex flex-col items-center justify-center p-4 rounded-xl border-2 cursor-pointer transition-all ${
-                    equipment === option.value
+                    equipment.includes(option.value)
                       ? 'bg-cyan-500/20 border-cyan-500 text-cyan-400'
                       : 'bg-slate-800/50 border-slate-700 text-slate-300 hover:bg-slate-800 hover:border-slate-600'
                   }`}
                 >
                   <input
-                    type="radio"
+                    type="checkbox"
                     name="equipment"
                     value={option.value}
-                    checked={equipment === option.value}
+                    checked={equipment.includes(option.value)}
                     onChange={(e) => {
-                      setEquipment(e.target.value)
+                      if (e.target.checked) {
+                        setEquipment([...equipment, option.value])
+                      } else {
+                        setEquipment(equipment.filter(eq => eq !== option.value))
+                      }
                       if (errors.equipment) setErrors({ ...errors, equipment: '' })
                     }}
                     className="sr-only"
                   />
                   <span className="text-3xl mb-2">{option.icon}</span>
                   <span className="text-xs font-display font-semibold text-center">{option.label}</span>
-                  {equipment === option.value && (
+                  {equipment.includes(option.value) && (
                     <div className="absolute top-2 right-2">
                       <span className="text-cyan-400">✓</span>
                     </div>
