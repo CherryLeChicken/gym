@@ -1,6 +1,112 @@
+import { useEffect, useRef } from 'react'
 import { VOICE_PERSONALITY, VOICE_GENDER } from '../hooks/useVoiceFeedback'
+import { useVoiceFeedback } from '../hooks/useVoiceFeedback'
+
+// Personality-specific phrases for voice preview
+const CALM_PHRASES = [
+  "Nice and steady. Take your time.",
+  "That rep looked good. Focus on your breathing.",
+  "You're doing great. No rush.",
+  "Slow and controlled. That's the way.",
+  "Breathe deeply. You've got this.",
+  "Take it easy. You're doing well.",
+  "Steady pace. Keep it smooth.",
+  "Relax and focus. You're doing fine."
+]
+
+const NEUTRAL_PHRASES = [
+  "Good form. Keep your back straight.",
+  "Lower slowly, then push up.",
+  "That's the right depth.",
+  "Let's get this started.",
+  "Focus on your technique.",
+  "You're ready for this.",
+  "Keep your form consistent.",
+  "That's the correct movement."
+]
+
+const ENERGETIC_PHRASES = [
+  "Yes! That's it!",
+  "Strong rep! Keep pushing!",
+  "Two more! You've got this!",
+  "Let's go! Crush it!",
+  "That's what I'm talking about!",
+  "Keep that energy up!",
+  "You're unstoppable!",
+  "Time to dominate!"
+]
+
+function getRandomPhrase(personality) {
+  let phrases
+  switch (personality) {
+    case 'calm':
+      phrases = CALM_PHRASES
+      break
+    case 'energetic':
+      phrases = ENERGETIC_PHRASES
+      break
+    case 'neutral':
+    default:
+      phrases = NEUTRAL_PHRASES
+      break
+  }
+  return phrases[Math.floor(Math.random() * phrases.length)]
+}
 
 export default function VoicePersonalitySelector({ personality, gender, onPersonalitySelect, onGenderSelect }) {
+  const { speak } = useVoiceFeedback(personality, gender)
+  const prevPersonalityRef = useRef(personality)
+  const prevGenderRef = useRef(gender)
+  const isInitialMountRef = useRef(true)
+
+  // Play preview when voice settings change (but not on initial mount)
+  useEffect(() => {
+    // Skip on initial mount
+    if (isInitialMountRef.current) {
+      isInitialMountRef.current = false
+      prevPersonalityRef.current = personality
+      prevGenderRef.current = gender
+      return
+    }
+
+    // Only play preview if personality or gender actually changed
+    if (prevPersonalityRef.current !== personality || prevGenderRef.current !== gender) {
+      const phrase = getRandomPhrase(personality)
+      console.log('Playing voice preview after change:', { phrase, personality, gender })
+      speak(phrase, null, null, null).catch(err => {
+        console.error('Error playing voice preview:', err)
+      })
+      
+      prevPersonalityRef.current = personality
+      prevGenderRef.current = gender
+    }
+  }, [personality, gender, speak])
+
+  // Handler for gender clicks - always play preview
+  const handleGenderClick = (newGender) => {
+    onGenderSelect(newGender)
+    // If clicking the same gender, play preview immediately
+    if (newGender === gender) {
+      const phrase = getRandomPhrase(personality)
+      console.log('Playing preview for same gender click:', { phrase, personality, gender })
+      speak(phrase, null, null, null).catch(err => {
+        console.error('Error playing voice preview:', err)
+      })
+    }
+  }
+
+  // Handler for personality clicks - always play preview
+  const handlePersonalityClick = (newPersonality) => {
+    onPersonalitySelect(newPersonality)
+    // If clicking the same personality, play preview immediately
+    if (newPersonality === personality) {
+      const phrase = getRandomPhrase(newPersonality)
+      console.log('Playing preview for same personality click:', { phrase, personality: newPersonality, gender })
+      speak(phrase, null, null, null).catch(err => {
+        console.error('Error playing voice preview:', err)
+      })
+    }
+  }
   const personalities = [
     {
       value: VOICE_PERSONALITY.CALM,
@@ -48,7 +154,7 @@ export default function VoicePersonalitySelector({ personality, gender, onPerson
           {genders.map((g) => (
             <button
               key={g.value}
-              onClick={() => onGenderSelect(g.value)}
+              onClick={() => handleGenderClick(g.value)}
               className={`flex-1 px-4 py-2 rounded-xl transition-all duration-200 ${
                 gender === g.value
                   ? 'bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400'
@@ -71,7 +177,7 @@ export default function VoicePersonalitySelector({ personality, gender, onPerson
           {personalities.map((p) => (
             <button
               key={p.value}
-              onClick={() => onPersonalitySelect(p.value)}
+              onClick={() => handlePersonalityClick(p.value)}
               className={`w-full text-left px-4 py-3 rounded-xl transition-all duration-200 ${
                 personality === p.value
                   ? 'bg-cyan-500/20 border-2 border-cyan-500 text-cyan-400'

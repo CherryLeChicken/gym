@@ -10,6 +10,7 @@ import { VOICE_PERSONALITY, VOICE_GENDER } from "./hooks/useVoiceFeedback";
 function App() {
 
   const [selectedExercise, setSelectedExercise] = useState(null);
+  const [hoveredExercise, setHoveredExercise] = useState(null);
   const [isActive, setIsActive] = useState(false);
   const [feedback, setFeedback] = useState("");
   const [repCount, setRepCount] = useState(0);

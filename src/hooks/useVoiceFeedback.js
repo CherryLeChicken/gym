@@ -77,6 +77,9 @@ const FEMALE_VOICES = {
 
 /**
  * Get base voice settings for personality and gender
+ * Calm: Slow pace, lower pitch, soft energy, longer pauses
+ * Neutral: Medium pace, natural pitch, clear articulation
+ * Energetic: Fast pace, higher pitch, dynamic intonation
  */
 const getPersonalitySettings = (personality, gender = VOICE_GENDER.MALE) => {
   // Get voice ID based on gender and personality
@@ -85,25 +88,28 @@ const getPersonalitySettings = (personality, gender = VOICE_GENDER.MALE) => {
 
   switch (personality) {
     case VOICE_PERSONALITY.CALM:
+      // Slow pace, lower pitch, soft energy, longer pauses
       return {
-        baseRate: 0.85,
-        basePitch: gender === VOICE_GENDER.FEMALE ? 1.05 : 0.95, // Slightly higher for female
-        baseStability: 0.7,
+        baseRate: 0.75, // Slower pace (was 0.85)
+        basePitch: gender === VOICE_GENDER.FEMALE ? 0.95 : 0.85, // Lower pitch (was 1.05/0.95)
+        baseStability: 0.8, // More stable, softer (was 0.7)
         voiceId: voiceId
       }
     case VOICE_PERSONALITY.ENERGETIC:
+      // Fast pace, higher pitch, dynamic intonation
       return {
-        baseRate: 0.95,
-        basePitch: gender === VOICE_GENDER.FEMALE ? 1.15 : 1.1,
-        baseStability: 0.3,
+        baseRate: 1.1, // Faster pace (was 0.95)
+        basePitch: gender === VOICE_GENDER.FEMALE ? 1.25 : 1.2, // Higher pitch (was 1.15/1.1)
+        baseStability: 0.2, // Less stable, more dynamic (was 0.3)
         voiceId: voiceId
       }
     case VOICE_PERSONALITY.NEUTRAL:
     default:
+      // Medium pace, natural pitch, clear articulation
       return {
-        baseRate: 0.9,
-        basePitch: gender === VOICE_GENDER.FEMALE ? 1.1 : 1.0,
-        baseStability: 0.5,
+        baseRate: 0.9, // Medium pace
+        basePitch: gender === VOICE_GENDER.FEMALE ? 1.05 : 0.95, // Natural pitch (was 1.1/1.0)
+        baseStability: 0.5, // Balanced stability
         voiceId: voiceId
       }
   }
@@ -243,9 +249,11 @@ export function useVoiceFeedback(personality = VOICE_PERSONALITY.NEUTRAL, gender
 function speakWithWebAPI(text, voiceSettings = { rate: 0.9, pitch: 1.0, volume: 1.0 }) {
   if ('speechSynthesis' in window) {
     const utterance = new SpeechSynthesisUtterance(text)
-    utterance.rate = voiceSettings.rate || 0.9
-    utterance.pitch = voiceSettings.pitch || 1.0
-    utterance.volume = voiceSettings.volume || 1.0
+    // Clamp rate between 0.1 and 10 (Web Speech API limits)
+    utterance.rate = Math.max(0.1, Math.min(10, voiceSettings.rate || 0.9))
+    // Clamp pitch between 0 and 2 (Web Speech API limits)
+    utterance.pitch = Math.max(0, Math.min(2, voiceSettings.pitch || 1.0))
+    utterance.volume = Math.max(0, Math.min(1, voiceSettings.volume || 1.0))
     
     return new Promise((resolve) => {
       utterance.onend = resolve
