@@ -39,17 +39,25 @@ export function analyzeSquat(keypoints) {
 
   // DEMO-SAFE BAD SQUAT DETECTION
   // Catch obvious bad squats where user bends forward without bending knees
-  if (
-    shoulder &&
-    hipAngle !== null &&
-    hipAngle < 145 &&      // torso leaning forward (lenient)
-    kneeAngle > 150       // knees mostly straight
-  ) {
-    return {
-      feedback: 'Keep your chest up and bend your knees as you squat',
-      isValid: false,
-      kneeAngle,
-      hipAngle
+  // Make this very sensitive to catch any bad squat pattern
+  // Multiple conditions to catch different types of bad squats
+  if (shoulder && hipAngle !== null) {
+    // Condition 1: Forward lean with mostly straight knees (most common bad squat)
+    const isForwardLeanWithStraightKnees = hipAngle < 160 && kneeAngle > 140
+    
+    // Condition 2: Significant forward lean (very bad form)
+    const isSignificantForwardLean = hipAngle < 150 && kneeAngle > 130
+    
+    // Condition 3: Moderate forward lean with very straight knees
+    const isModerateLeanWithVeryStraightKnees = hipAngle < 170 && kneeAngle > 150
+    
+    if (isForwardLeanWithStraightKnees || isSignificantForwardLean || isModerateLeanWithVeryStraightKnees) {
+      return {
+        feedback: 'Keep your chest up and bend your knees as you squat',
+        isValid: false,
+        kneeAngle,
+        hipAngle
+      }
     }
   }
 

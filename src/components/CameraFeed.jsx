@@ -356,8 +356,9 @@ export default function CameraFeed({
     const leftWrist = findKeypoint(keypoints, "left_wrist");
     if (leftShoulder && leftElbow && leftWrist) {
       const elbowAngle = calculateAngle(leftShoulder, leftElbow, leftWrist);
-      ctx.strokeText(`${Math.round(elbowAngle)}°`, leftElbow.x + 10, leftElbow.y - 10);
-      ctx.fillText(`${Math.round(elbowAngle)}°`, leftElbow.x + 10, leftElbow.y - 10);
+      const label = `elbowAngle: ${Math.round(elbowAngle)}°`;
+      ctx.strokeText(label, leftElbow.x + 10, leftElbow.y - 10);
+      ctx.fillText(label, leftElbow.x + 10, leftElbow.y - 10);
     }
 
     // Right elbow angle (right_shoulder - right_elbow - right_wrist)
@@ -366,8 +367,9 @@ export default function CameraFeed({
     const rightWrist = findKeypoint(keypoints, "right_wrist");
     if (rightShoulder && rightElbow && rightWrist) {
       const elbowAngle = calculateAngle(rightShoulder, rightElbow, rightWrist);
-      ctx.strokeText(`${Math.round(elbowAngle)}°`, rightElbow.x + 10, rightElbow.y - 10);
-      ctx.fillText(`${Math.round(elbowAngle)}°`, rightElbow.x + 10, rightElbow.y - 10);
+      const label = `elbowAngle: ${Math.round(elbowAngle)}°`;
+      ctx.strokeText(label, rightElbow.x + 10, rightElbow.y - 10);
+      ctx.fillText(label, rightElbow.x + 10, rightElbow.y - 10);
     }
 
     // Left knee angle (left_hip - left_knee - left_ankle)
@@ -376,8 +378,9 @@ export default function CameraFeed({
     const leftAnkle = findKeypoint(keypoints, "left_ankle");
     if (leftHip && leftKnee && leftAnkle) {
       const kneeAngle = calculateAngle(leftHip, leftKnee, leftAnkle);
-      ctx.strokeText(`${Math.round(kneeAngle)}°`, leftKnee.x + 10, leftKnee.y + 20);
-      ctx.fillText(`${Math.round(kneeAngle)}°`, leftKnee.x + 10, leftKnee.y + 20);
+      const label = `kneeAngle: ${Math.round(kneeAngle)}°`;
+      ctx.strokeText(label, leftKnee.x + 10, leftKnee.y + 20);
+      ctx.fillText(label, leftKnee.x + 10, leftKnee.y + 20);
     }
 
     // Right knee angle (right_hip - right_knee - right_ankle)
@@ -386,38 +389,43 @@ export default function CameraFeed({
     const rightAnkle = findKeypoint(keypoints, "right_ankle");
     if (rightHip && rightKnee && rightAnkle) {
       const kneeAngle = calculateAngle(rightHip, rightKnee, rightAnkle);
-      ctx.strokeText(`${Math.round(kneeAngle)}°`, rightKnee.x + 10, rightKnee.y + 20);
-      ctx.fillText(`${Math.round(kneeAngle)}°`, rightKnee.x + 10, rightKnee.y + 20);
+      const label = `kneeAngle: ${Math.round(kneeAngle)}°`;
+      ctx.strokeText(label, rightKnee.x + 10, rightKnee.y + 20);
+      ctx.fillText(label, rightKnee.x + 10, rightKnee.y + 20);
     }
 
     // Left hip angle (left_shoulder - left_hip - left_knee) - back alignment
     if (leftShoulder && leftHip && leftKnee) {
       const hipAngle = calculateAngle(leftShoulder, leftHip, leftKnee);
-      ctx.strokeText(`${Math.round(hipAngle)}°`, leftHip.x - 30, leftHip.y);
-      ctx.fillText(`${Math.round(hipAngle)}°`, leftHip.x - 30, leftHip.y);
+      const label = `hipAngle: ${Math.round(hipAngle)}°`;
+      ctx.strokeText(label, leftHip.x - 30, leftHip.y);
+      ctx.fillText(label, leftHip.x - 30, leftHip.y);
     }
 
     // Right hip angle (right_shoulder - right_hip - right_knee) - back alignment
     if (rightShoulder && rightHip && rightKnee) {
       const hipAngle = calculateAngle(rightShoulder, rightHip, rightKnee);
-      ctx.strokeText(`${Math.round(hipAngle)}°`, rightHip.x + 10, rightHip.y);
-      ctx.fillText(`${Math.round(hipAngle)}°`, rightHip.x + 10, rightHip.y);
+      const label = `hipAngle: ${Math.round(hipAngle)}°`;
+      ctx.strokeText(label, rightHip.x + 10, rightHip.y);
+      ctx.fillText(label, rightHip.x + 10, rightHip.y);
     }
 
     // Left shoulder angle (left_ear - left_shoulder - left_hip)
     const leftEar = findKeypoint(keypoints, "left_ear");
     if (leftEar && leftShoulder && leftHip) {
       const shoulderAngle = calculateAngle(leftEar, leftShoulder, leftHip);
-      ctx.strokeText(`${Math.round(shoulderAngle)}°`, leftShoulder.x - 30, leftShoulder.y - 10);
-      ctx.fillText(`${Math.round(shoulderAngle)}°`, leftShoulder.x - 30, leftShoulder.y - 10);
+      const label = `shoulderAngle: ${Math.round(shoulderAngle)}°`;
+      ctx.strokeText(label, leftShoulder.x - 30, leftShoulder.y - 10);
+      ctx.fillText(label, leftShoulder.x - 30, leftShoulder.y - 10);
     }
 
     // Right shoulder angle (right_ear - right_shoulder - right_hip)
     const rightEar = findKeypoint(keypoints, "right_ear");
     if (rightEar && rightShoulder && rightHip) {
       const shoulderAngle = calculateAngle(rightEar, rightShoulder, rightHip);
-      ctx.strokeText(`${Math.round(shoulderAngle)}°`, rightShoulder.x + 10, rightShoulder.y - 10);
-      ctx.fillText(`${Math.round(shoulderAngle)}°`, rightShoulder.x + 10, rightShoulder.y - 10);
+      const label = `shoulderAngle: ${Math.round(shoulderAngle)}°`;
+      ctx.strokeText(label, rightShoulder.x + 10, rightShoulder.y - 10);
+      ctx.fillText(label, rightShoulder.x + 10, rightShoulder.y - 10);
     }
   };
 
