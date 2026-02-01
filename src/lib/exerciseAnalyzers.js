@@ -37,6 +37,22 @@ export function analyzeSquat(keypoints) {
     hipAngle = calculateAngle(shoulder, hip, knee)
   }
 
+  // DEMO-SAFE BAD SQUAT DETECTION
+  // Catch obvious bad squats where user bends forward without bending knees
+  if (
+    shoulder &&
+    hipAngle !== null &&
+    hipAngle < 145 &&      // torso leaning forward (lenient)
+    kneeAngle > 150       // knees mostly straight
+  ) {
+    return {
+      feedback: 'Keep your chest up and bend your knees as you squat',
+      isValid: false,
+      kneeAngle,
+      hipAngle
+    }
+  }
+
   // Determine feedback based on angles
   let feedback = ''
   let isValid = true
@@ -62,12 +78,16 @@ export function analyzeSquat(keypoints) {
     const upperBodyHorizontalDiff = Math.abs(shoulder.x - hip.x)
     const upperBodyAngleFromVertical = Math.atan2(upperBodyHorizontalDiff, upperBodyVerticalDiff) * 180 / Math.PI
     
-    // Special case: knees are straight but upper body is bending
-    // This is bending at hips with straight legs - incorrect form
-    if (upperBodyAngleFromVertical > 50 && kneeAngle > 170) {
-      // Knees are straight (almost no bend) but upper body is bent over
+    // Detect "bow" pattern: upper body bent forward with straight/almost straight knees
+    // More sensitive to catch bowing motion - lower threshold
+    // Check multiple conditions to catch different types of bowing
+    const isBowingForward = upperBodyAngleFromVertical > 30 && kneeAngle > 155
+    const isBowingWithStraightKnees = upperBodyAngleFromVertical > 25 && kneeAngle > 165
+    
+    if (isBowingForward || isBowingWithStraightKnees) {
+      // Upper body is bent forward and knees are straight/almost straight - this is a bow
       return {
-        feedback: 'Bend the knees and keep chest up',
+        feedback: 'Bend your knees and keep your chest up - sit back into the squat',
         isValid: false,
         kneeAngle,
         hipAngle
@@ -87,17 +107,30 @@ export function analyzeSquat(keypoints) {
     }
   }
 
-  // Detect "good morning" pattern: back moving down but knees barely bending
-  // If knee angle is large (barely bent) but hip has moved down relative to shoulder
-  // This indicates forward lean instead of proper squatting
-  if (shoulder && hip && kneeAngle > 160) {
+  // Detect "good morning" pattern: upper body bending forward while legs stay straight
+  // This is a separate check from the bow pattern above
+  // Good morning = whole upper body forward lean with straight/almost straight knees
+  if (shoulder && hip && knee) {
     const hipShoulderHeightDiff = hip.y - shoulder.y
-    // If hip is significantly below shoulder (they've moved down) but knees aren't bending
-    // This suggests they're leaning forward rather than squatting
-    if (hipShoulderHeightDiff > 50) {
-      // Back is moving down but knees aren't bending - good morning pattern
+    
+    // Calculate upper body angle to detect forward lean
+    const upperBodyVerticalDiff = Math.abs(shoulder.y - hip.y)
+    const upperBodyHorizontalDiff = Math.abs(shoulder.x - hip.x)
+    const upperBodyAngleFromVertical = Math.atan2(upperBodyHorizontalDiff, upperBodyVerticalDiff) * 180 / Math.PI
+    
+    // Good morning pattern: upper body bent forward with straight knees
+    // More sensitive thresholds to catch the pattern:
+    // 1. Upper body angle > 30° (forward lean) AND knees straight (kneeAngle > 150°)
+    // 2. Hip moved down (more than 25 pixels) AND knees straight (kneeAngle > 150°)
+    // 3. Upper body angle > 25° AND knees very straight (kneeAngle > 160°)
+    const isUpperBodyBentForward = upperBodyAngleFromVertical > 30 && kneeAngle > 150
+    const isHipMovingDownWithoutKneeBend = hipShoulderHeightDiff > 25 && kneeAngle > 150
+    const isSlightLeanWithVeryStraightKnees = upperBodyAngleFromVertical > 25 && kneeAngle > 160
+    
+    if (isUpperBodyBentForward || isHipMovingDownWithoutKneeBend || isSlightLeanWithVeryStraightKnees) {
+      // Whole upper body is bending forward but knees aren't bending - good morning pattern
       return {
-        feedback: 'Keep your chest up',
+        feedback: 'Bend your knees and keep your chest up - sit back into the squat',
         isValid: false,
         kneeAngle,
         hipAngle
