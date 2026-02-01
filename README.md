@@ -29,11 +29,11 @@ Beginners lack access to affordable, judgment-free fitness guidance, which preve
 
 ### Why Chin Up?
 
-✅ **No need to hire personal trainers** - Get real-time form correction and guidance  
-✅ **No need to purchase a gym membership** - Work out from home with 100+ exercises  
-✅ **Learn the basics** - Build confidence and skills to start your physical health journey  
-✅ **Judgment-free zone** - Your personal AI coach, available 24/7  
-✅ **Voice-first design** - Hands-free guidance, perfect for beginners and neurodivergent users
+**No need to hire personal trainers** - Get real-time form correction and guidance  
+**No need to purchase a gym membership** - Work out from home with a large directory of exercises
+**Learn the basics** - Build confidence and skills to start your physical health journey  
+**Judgment-free zone** - Your personal AI coach, available 24/7  
+**Voice-first design** - Hands-free guidance, perfect for beginners and neurodivergent users
 
 ---
 
@@ -60,7 +60,7 @@ Beginners lack access to affordable, judgment-free fitness guidance, which preve
 
 ### 🎨 Personalized Experience
 - **Onboarding** - Set your workout preferences (type, equipment, name)
-- **100+ exercises** filtered by your preferences
+- **Large directory of exercises** filtered by your preferences
 - **Favorite exercises** - Save your go-to workouts
 - **Random exercise** button - Never get stuck choosing
 - **Exercise preview videos** - See how to do each exercise correctly
@@ -120,7 +120,7 @@ Navigate to `http://localhost:5173` (or the port shown in your terminal)
    - Choose your available equipment (No equipment, Dumbbells, Resistance bands, Chair/bench)
 
 2. **Select an Exercise**
-   - Browse 100+ exercises filtered by your preferences
+   - Browse exercises filtered by your preferences
    - Click any exercise to see a preview video
    - Use the ⭐ button to favorite exercises
    - Click the 🎲 button for a random exercise
@@ -147,7 +147,7 @@ Navigate to `http://localhost:5173` (or the port shown in your terminal)
 - **MoveNet** - Pose detection model
 
 ### Key Integrations
-- **ElevenLabs TTS API** - Natural voice generation
+- **ElevenLabs TTS API** - Natural voice generation and music generation
 - **Presage Physiology SDK** - Predictive analytics
 - **Web Speech API** - Fallback voice synthesis
 
@@ -286,32 +286,6 @@ Requires:
 - Some exercises may not match your current preferences
 - Try adjusting your preferences in the settings panel
 
----
-
-## 📊 Project Status
-
-### ✅ Phase 1: MVP (Completed)
-- Camera integration and pose detection
-- Form analysis for multiple exercises
-- Voice feedback with ElevenLabs integration
-- Basic UI and exercise selection
-
-### ✅ Phase 2: Enhancements (Completed)
-- Presage SDK integration for predictive analytics
-- Rep counting
-- Voice personality and gender selection
-- Exercise preview videos
-- Onboarding and personalization
-- 100+ exercise library
-- Favorite exercises
-- Background music generation
-
-### ✅ Phase 3: Polish (Completed)
-- Feedback variant system (prevents repetition)
-- Adaptive feedback based on Presage data
-- Performance optimization
-- Error handling and fallbacks
-- UI/UX improvements
 
 ---
 
@@ -329,12 +303,6 @@ Requires:
 ## 🤝 Contributing
 
 This is a hackathon project, but contributions and feedback are welcome!
-
----
-
-## 📄 License
-
-[Add your license here]
 
 ---
 
